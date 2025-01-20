@@ -1,0 +1,298 @@
+export const ClickerAbi = [
+  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+  {
+    inputs: [{ internalType: "address", name: "owner", type: "address" }],
+    name: "OwnableInvalidOwner",
+    type: "error",
+  },
+  {
+    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    name: "OwnableUnauthorizedAccount",
+    type: "error",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "clicks",
+        type: "uint256",
+      },
+    ],
+    name: "Click",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "previousOwner",
+        type: "address",
+      },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
+    name: "OwnershipTransferred",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "username",
+        type: "string",
+      },
+    ],
+    name: "UserRegistered",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalAmount",
+        type: "uint256",
+      },
+    ],
+    name: "Withdraw",
+    type: "event",
+  },
+  {
+    inputs: [],
+    name: "click",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "string", name: "", type: "string" }],
+    name: "getAddressByUsername",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLeaderboard",
+    outputs: [
+      {
+        components: [
+          { internalType: "string", name: "username", type: "string" },
+          { internalType: "uint256", name: "clicks", type: "uint256" },
+          { internalType: "uint16", name: "multiplier", type: "uint16" },
+          { internalType: "uint16", name: "totalReferrals", type: "uint16" },
+        ],
+        internalType: "struct Clicker.UserInfo[50]",
+        name: "",
+        type: "tuple[50]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "getRegisteredStatusByAddress",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "string", name: "", type: "string" }],
+    name: "getRegisteredStatusByUsername",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint16", name: "page", type: "uint16" },
+      { internalType: "uint16", name: "pageSize", type: "uint16" },
+    ],
+    name: "getWithdrawalHistory",
+    outputs: [
+      { internalType: "uint16", name: "", type: "uint16" },
+      {
+        components: [
+          {
+            components: [
+              { internalType: "string", name: "username", type: "string" },
+              { internalType: "uint256", name: "clicks", type: "uint256" },
+              { internalType: "uint16", name: "multiplier", type: "uint16" },
+              {
+                internalType: "uint16",
+                name: "totalReferrals",
+                type: "uint16",
+              },
+            ],
+            internalType: "struct Clicker.UserInfo[50]",
+            name: "winners",
+            type: "tuple[50]",
+          },
+          { internalType: "uint256", name: "timestamp", type: "uint256" },
+          { internalType: "uint256", name: "totalAmount", type: "uint256" },
+        ],
+        internalType: "struct Clicker.WithdrawalHistory[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint16", name: "startRow", type: "uint16" },
+      { internalType: "uint16", name: "endRow", type: "uint16" },
+    ],
+    name: "getWithdrawalHistory2",
+    outputs: [
+      { internalType: "uint16", name: "", type: "uint16" },
+      {
+        components: [
+          {
+            components: [
+              { internalType: "string", name: "username", type: "string" },
+              { internalType: "uint256", name: "clicks", type: "uint256" },
+              { internalType: "uint16", name: "multiplier", type: "uint16" },
+              {
+                internalType: "uint16",
+                name: "totalReferrals",
+                type: "uint16",
+              },
+            ],
+            internalType: "struct Clicker.UserInfo[50]",
+            name: "winners",
+            type: "tuple[50]",
+          },
+          { internalType: "uint256", name: "timestamp", type: "uint256" },
+          { internalType: "uint256", name: "totalAmount", type: "uint256" },
+        ],
+        internalType: "struct Clicker.WithdrawalHistory[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "increaseMultiplier",
+    outputs: [],
+    stateMutability: "payable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "string", name: "", type: "string" }],
+    name: "isUsernameTaken",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lastWithdraw",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "owner",
+    outputs: [{ internalType: "address", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "string", name: "_username", type: "string" },
+      { internalType: "string", name: "_referrerUsername", type: "string" },
+    ],
+    name: "register",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "renounceOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "top50Users",
+    outputs: [
+      { internalType: "string", name: "username", type: "string" },
+      { internalType: "uint256", name: "clicks", type: "uint256" },
+      { internalType: "uint16", name: "multiplier", type: "uint16" },
+      { internalType: "uint16", name: "totalReferrals", type: "uint16" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalUsers",
+    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    name: "transferOwnership",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "users",
+    outputs: [
+      { internalType: "string", name: "username", type: "string" },
+      { internalType: "uint256", name: "clicks", type: "uint256" },
+      { internalType: "uint16", name: "multiplier", type: "uint16" },
+      { internalType: "uint16", name: "totalReferrals", type: "uint16" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "withdraw",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "withdrawalHistory",
+    outputs: [
+      { internalType: "uint256", name: "timestamp", type: "uint256" },
+      { internalType: "uint256", name: "totalAmount", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
