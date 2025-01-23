@@ -21,7 +21,7 @@ A decentralized clicker game where players compete by clicking to earn rewards. 
 
 ### Rewards Distribution
 
-- Triggered manually by owner every 6 hours
+- Triggered automatically every 6 hours
 - 50% of pool distributed to top 50
 - 25% to contract owner (configurable)
 - 25% remains for future pools
