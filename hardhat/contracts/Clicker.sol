@@ -300,7 +300,7 @@ contract Clicker is Ownable {
 
     /// @dev Owner function to reset leaderboard and calculate rewards every 6 hours
     function resetLeaderboard() external onlyOwner {
-        require(block.timestamp - lastReset > 6 hours, '6h cooldown');
+        require(block.timestamp - lastReset > (5 hours + 45 minutes), '5h45m cooldown');
         
         uint256 availableBalance = address(this).balance - totalPendingRewards;
         uint256 ownerPayment = availableBalance * ownerPercentage / 100;

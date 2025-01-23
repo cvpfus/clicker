@@ -49,7 +49,7 @@ A decentralized clicker game where players compete by clicking to earn rewards. 
 
 ## Contract Address
 
-[0xC4aD0a4142c4B43Af8FD12A3908284ea3c548E60](https://assam.tea.xyz/address/0xC4aD0a4142c4B43Af8FD12A3908284ea3c548E60)
+[0x54a16FDc394cB66677B1cA6F877C874Ea8E98a25](https://assam.tea.xyz/address/0x54a16FDc394cB66677B1cA6F877C874Ea8E98a25)
 
 ## Warning
 

@@ -2,7 +2,7 @@ import { defineChain } from "viem";
 
 export const BASE_URL = "https://clicker.assam.dev";
 
-export const ClickerAddress = "0xC4aD0a4142c4B43Af8FD12A3908284ea3c548E60";
+export const ClickerAddress = "0x54a16FDc394cB66677B1cA6F877C874Ea8E98a25";
 
 export const multipliers = [10, 25, 50];
 
