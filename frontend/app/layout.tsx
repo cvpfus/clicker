@@ -36,9 +36,12 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Clicker",
+  title: {
+    template: "%s | Clicker",
+    default: "Clicker",
+  },
   description:
-    "Clicker is a simple clicker game where users can register, click, and see the top 10 users.",
+    "Clicker game is a decentralized clicker game where players compete by clicking to earn rewards.",
 };
 
 export default async function RootLayout({

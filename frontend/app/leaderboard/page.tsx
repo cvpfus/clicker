@@ -18,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Metadata } from "next";
 
 const REWARD_DISTRIBUTION = [
   { rank: "1", percentage: "15%" },
@@ -30,6 +31,12 @@ const REWARD_DISTRIBUTION = [
   { rank: "21-30", percentage: "10% (1% each)" },
   { rank: "31-50", percentage: "9% (0.45% each)" },
 ] as const;
+
+export const metadata: Metadata = {
+  title: "Leaderboard",
+  description:
+    "Leaderboard is reset every 6 hours and the top 50 users will earn accumulated TEA.",
+};
 
 export default function Leaderboard() {
   return (
