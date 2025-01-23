@@ -136,6 +136,38 @@ export const ClickerAbi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "clickFee",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "weiAmount",
+        type: "uint256",
+      },
+    ],
+    name: "formatEther",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "pure",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "string",
@@ -412,6 +444,19 @@ export const ClickerAbi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "ownerPercentage",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -458,6 +503,32 @@ export const ClickerAbi = [
   {
     inputs: [],
     name: "resetLeaderboard",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_clickFee",
+        type: "uint256",
+      },
+    ],
+    name: "setClickFee",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "_ownerPercentage",
+        type: "uint256",
+      },
+    ],
+    name: "setOwnerPercentage",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
