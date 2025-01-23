@@ -70,7 +70,7 @@ export default async function RootLayout({
             </Sidebar>
             <div className="flex flex-col w-full">
               <div className="flex justify-end pt-8 max-w-6xl w-full mx-auto">
-                {/* @ts-ignore */}
+                {/* @ts-expect-error this is expected */}
                 <appkit-button className="self-end" />
               </div>
               <div className="w-full h-full max-w-6xl mx-auto px-8">

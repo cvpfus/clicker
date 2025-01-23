@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
-import { CopyIcon, Loader2, PlusIcon } from "lucide-react";
+import { Loader2, PlusIcon } from "lucide-react";
 import { useAccount, useBalance } from "wagmi";
 import { formatEther, parseEther } from "viem";
 import { useGetUserInfo } from "@/hooks/use-get-user-info";

@@ -7,7 +7,7 @@ import { wagmiAdapter, projectId, metadata } from "@/wagmi";
 import { createAppKit } from "@reown/appkit/react";
 import { teaTestnet } from "@/constants";
 import { config as wagmiConfig } from "@/wagmi";
-import { bscTestnet } from "@reown/appkit/networks";
+// import { bscTestnet } from "@reown/appkit/networks";
 
 createAppKit({
   adapters: [wagmiAdapter],
