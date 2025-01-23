@@ -6,6 +6,7 @@ import {
   SidebarBody,
   SidebarItem,
   ItemProps,
+  SidebarGap,
 } from "@/components/ui/sidebar";
 import { House, Trophy } from "lucide-react";
 import { cookieToInitialState } from "wagmi";
@@ -56,7 +57,7 @@ export default async function RootLayout({
         <Toaster position="top-right" />
         <ThemeProvider attribute="class" defaultTheme="dark">
           <div className="flex h-screen w-full">
-            <div className="w-[250px] my-8 mx-4" />
+            <SidebarGap />
             <Sidebar>
               <SidebarHeader>
                 <h1 className="text-2xl font-bold text-active">Clicker</h1>
@@ -70,9 +71,9 @@ export default async function RootLayout({
             <div className="flex flex-col w-full">
               <div className="flex justify-end pt-8 max-w-6xl w-full mx-auto">
                 {/* @ts-ignore */}
-                <appkit-button balance="hide" className="self-end" />
+                <appkit-button className="self-end" />
               </div>
-              <div className="w-full h-full max-w-6xl mx-auto">
+              <div className="w-full h-full max-w-6xl mx-auto px-8">
                 <Providers initialState={initialState}>
                   <Connect>{children}</Connect>
                 </Providers>

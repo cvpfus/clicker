@@ -1,19 +1,40 @@
 export const ClickerAbi = [
-  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
-    inputs: [{ internalType: "address", name: "owner", type: "address" }],
+    inputs: [],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "owner",
+        type: "address",
+      },
+    ],
     name: "OwnableInvalidOwner",
     type: "error",
   },
   {
-    inputs: [{ internalType: "address", name: "account", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "account",
+        type: "address",
+      },
+    ],
     name: "OwnableUnauthorizedAccount",
     type: "error",
   },
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
       {
         indexed: false,
         internalType: "uint256",
@@ -22,6 +43,25 @@ export const ClickerAbi = [
       },
     ],
     name: "Click",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "totalAmount",
+        type: "uint256",
+      },
+    ],
+    name: "LeaderboardReset",
     type: "event",
   },
   {
@@ -46,7 +86,31 @@ export const ClickerAbi = [
   {
     anonymous: false,
     inputs: [
-      { indexed: true, internalType: "address", name: "user", type: "address" },
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "amount",
+        type: "uint256",
+      },
+    ],
+    name: "RewardClaimed",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      {
+        indexed: true,
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
       {
         indexed: false,
         internalType: "string",
@@ -58,23 +122,11 @@ export const ClickerAbi = [
     type: "event",
   },
   {
-    anonymous: false,
-    inputs: [
-      {
-        indexed: true,
-        internalType: "uint256",
-        name: "timestamp",
-        type: "uint256",
-      },
-      {
-        indexed: false,
-        internalType: "uint256",
-        name: "totalAmount",
-        type: "uint256",
-      },
-    ],
-    name: "Withdraw",
-    type: "event",
+    inputs: [],
+    name: "claimReward",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
   },
   {
     inputs: [],
@@ -84,24 +136,151 @@ export const ClickerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "string", name: "", type: "string" }],
+    inputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
     name: "getAddressByUsername",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "getClaimableAmount",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "getLeaderboard",
+    name: "getLast5LeaderboardHistory",
     outputs: [
       {
         components: [
-          { internalType: "string", name: "username", type: "string" },
-          { internalType: "uint256", name: "clicks", type: "uint256" },
-          { internalType: "uint16", name: "multiplier", type: "uint16" },
-          { internalType: "uint16", name: "totalReferrals", type: "uint16" },
+          {
+            components: [
+              {
+                internalType: "string",
+                name: "username",
+                type: "string",
+              },
+              {
+                internalType: "address",
+                name: "userAddress",
+                type: "address",
+              },
+              {
+                internalType: "uint256",
+                name: "clicks",
+                type: "uint256",
+              },
+            ],
+            internalType: "struct Clicker.LeaderBoardInfo[50]",
+            name: "winners",
+            type: "tuple[50]",
+          },
+          {
+            internalType: "uint256",
+            name: "timestamp",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "totalAmount",
+            type: "uint256",
+          },
         ],
-        internalType: "struct Clicker.UserInfo[50]",
+        internalType: "struct Clicker.LeaderboardHistory[]",
+        name: "",
+        type: "tuple[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "getRegisteredStatusByAddress",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    name: "getRegisteredStatusByUsername",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getUnsortedLeaderboard",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "username",
+            type: "string",
+          },
+          {
+            internalType: "address",
+            name: "userAddress",
+            type: "address",
+          },
+          {
+            internalType: "uint256",
+            name: "clicks",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct Clicker.LeaderBoardInfo[50]",
         name: "",
         type: "tuple[50]",
       },
@@ -110,86 +289,34 @@ export const ClickerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "", type: "address" }],
-    name: "getRegisteredStatusByAddress",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "string", name: "", type: "string" }],
-    name: "getRegisteredStatusByUsername",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
-      { internalType: "uint16", name: "page", type: "uint16" },
-      { internalType: "uint16", name: "pageSize", type: "uint16" },
-    ],
-    name: "getWithdrawalHistory",
-    outputs: [
-      { internalType: "uint16", name: "", type: "uint16" },
       {
-        components: [
-          {
-            components: [
-              { internalType: "string", name: "username", type: "string" },
-              { internalType: "uint256", name: "clicks", type: "uint256" },
-              { internalType: "uint16", name: "multiplier", type: "uint16" },
-              {
-                internalType: "uint16",
-                name: "totalReferrals",
-                type: "uint16",
-              },
-            ],
-            internalType: "struct Clicker.UserInfo[50]",
-            name: "winners",
-            type: "tuple[50]",
-          },
-          { internalType: "uint256", name: "timestamp", type: "uint256" },
-          { internalType: "uint256", name: "totalAmount", type: "uint256" },
-        ],
-        internalType: "struct Clicker.WithdrawalHistory[]",
-        name: "",
-        type: "tuple[]",
+        internalType: "address",
+        name: "user",
+        type: "address",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint16", name: "startRow", type: "uint16" },
-      { internalType: "uint16", name: "endRow", type: "uint16" },
-    ],
-    name: "getWithdrawalHistory2",
+    name: "getUserFullData",
     outputs: [
-      { internalType: "uint16", name: "", type: "uint16" },
       {
-        components: [
-          {
-            components: [
-              { internalType: "string", name: "username", type: "string" },
-              { internalType: "uint256", name: "clicks", type: "uint256" },
-              { internalType: "uint16", name: "multiplier", type: "uint16" },
-              {
-                internalType: "uint16",
-                name: "totalReferrals",
-                type: "uint16",
-              },
-            ],
-            internalType: "struct Clicker.UserInfo[50]",
-            name: "winners",
-            type: "tuple[50]",
-          },
-          { internalType: "uint256", name: "timestamp", type: "uint256" },
-          { internalType: "uint256", name: "totalAmount", type: "uint256" },
-        ],
-        internalType: "struct Clicker.WithdrawalHistory[]",
-        name: "",
-        type: "tuple[]",
+        internalType: "string",
+        name: "username",
+        type: "string",
+      },
+      {
+        internalType: "uint24",
+        name: "multiplier",
+        type: "uint24",
+      },
+      {
+        internalType: "uint16",
+        name: "referrals",
+        type: "uint16",
+      },
+      {
+        internalType: "uint256",
+        name: "clicks",
+        type: "uint256",
       },
     ],
     stateMutability: "view",
@@ -203,30 +330,118 @@ export const ClickerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "string", name: "", type: "string" }],
+    inputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
     name: "isUsernameTaken",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "lastWithdraw",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    name: "lastReset",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "lastResetBlockNumber",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "leaderboardHistory",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "timestamp",
+        type: "uint256",
+      },
+      {
+        internalType: "uint256",
+        name: "totalAmount",
+        type: "uint256",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
     name: "owner",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [
-      { internalType: "string", name: "_username", type: "string" },
-      { internalType: "string", name: "_referrerUsername", type: "string" },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "pendingRewards",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "string",
+        name: "_username",
+        type: "string",
+      },
+      {
+        internalType: "string",
+        name: "_referrerUsername",
+        type: "string",
+      },
     ],
     name: "register",
     outputs: [],
@@ -241,13 +456,40 @@ export const ClickerAbi = [
     type: "function",
   },
   {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    name: "top50Users",
+    inputs: [],
+    name: "resetLeaderboard",
+    outputs: [],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "top50Addresses",
     outputs: [
-      { internalType: "string", name: "username", type: "string" },
-      { internalType: "uint256", name: "clicks", type: "uint256" },
-      { internalType: "uint16", name: "multiplier", type: "uint16" },
-      { internalType: "uint16", name: "totalReferrals", type: "uint16" },
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "totalPendingRewards",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
     type: "function",
@@ -255,42 +497,78 @@ export const ClickerAbi = [
   {
     inputs: [],
     name: "totalUsers",
-    outputs: [{ internalType: "uint32", name: "", type: "uint32" }],
+    outputs: [
+      {
+        internalType: "uint32",
+        name: "",
+        type: "uint32",
+      },
+    ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
+    inputs: [
+      {
+        internalType: "address",
+        name: "newOwner",
+        type: "address",
+      },
+    ],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [{ internalType: "address", name: "", type: "address" }],
-    name: "users",
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "userClicks",
     outputs: [
-      { internalType: "string", name: "username", type: "string" },
-      { internalType: "uint256", name: "clicks", type: "uint256" },
-      { internalType: "uint16", name: "multiplier", type: "uint16" },
-      { internalType: "uint16", name: "totalReferrals", type: "uint16" },
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
     ],
     stateMutability: "view",
     type: "function",
   },
   {
-    inputs: [],
-    name: "withdraw",
-    outputs: [],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    name: "withdrawalHistory",
+    inputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    name: "users",
     outputs: [
-      { internalType: "uint256", name: "timestamp", type: "uint256" },
-      { internalType: "uint256", name: "totalAmount", type: "uint256" },
+      {
+        internalType: "string",
+        name: "username",
+        type: "string",
+      },
+      {
+        internalType: "uint24",
+        name: "multiplier",
+        type: "uint24",
+      },
+      {
+        internalType: "uint16",
+        name: "totalReferrals",
+        type: "uint16",
+      },
+      {
+        internalType: "address",
+        name: "userAddress",
+        type: "address",
+      },
     ],
     stateMutability: "view",
     type: "function",

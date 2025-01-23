@@ -30,6 +30,11 @@ export const Register = () => {
   const { queryKey } = useGetRegisteredStatusByAddress(address!);
 
   const handleRegister = async () => {
+    if (!username) {
+      toast.error("Username cannot be empty");
+      return;
+    }
+
     setIsLoading(true);
 
     writeContract(

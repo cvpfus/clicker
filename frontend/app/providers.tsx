@@ -12,8 +12,8 @@ import { bscTestnet } from "@reown/appkit/networks";
 createAppKit({
   adapters: [wagmiAdapter],
   projectId,
-  networks: [bscTestnet],
-  defaultNetwork: bscTestnet,
+  networks: [teaTestnet],
+  defaultNetwork: teaTestnet,
   metadata: metadata,
   themeMode: "dark",
   features: {

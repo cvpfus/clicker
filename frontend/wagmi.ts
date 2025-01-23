@@ -5,7 +5,7 @@ import { bscTestnet } from "@reown/appkit/networks";
 
 export const projectId = "b8fe50ac0bee495a7edce32a0bbca77d";
 
-export const networks = [bscTestnet];
+export const networks = [teaTestnet];
 
 export const metadata = {
   name: "Clicker",

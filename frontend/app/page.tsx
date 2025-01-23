@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
-import { CopyIcon, PlusIcon } from "lucide-react";
+import { CopyIcon, Loader2, PlusIcon } from "lucide-react";
 import { useAccount, useBalance } from "wagmi";
 import { formatEther, parseEther } from "viem";
 import { useGetUserInfo } from "@/hooks/use-get-user-info";
@@ -20,6 +20,11 @@ import { waitForTransactionReceipt } from "@wagmi/core";
 import { config } from "@/wagmi";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useGetPendingRewards } from "@/hooks/use-get-pending-rewards";
+import CopyButton from "./_components/copy-button";
+import CountUp from "@/blocks/TextAnimations/CountUp/CountUp";
+import { multipliers, clickCost } from "@/constants";
 
 export default function Home() {
   const { address } = useAccount();
@@ -33,72 +38,142 @@ export default function Home() {
     },
   });
 
-  const { queryKey, ...userInfoResult } = useGetUserInfo(address!);
+  const { queryKey: userInfoQueryKey, ...userInfoResult } = useGetUserInfo(
+    address!
+  );
+
+  const { queryKey: pendingRewardsQueryKey, ...pendingRewardsResult } =
+    useGetPendingRewards(address!);
 
   const { writeContract } = useWriteContract();
 
-  const handleIncreaseMultiplier = (amount: number) => {
+  const [isIncreasingMultiplier, setIsIncreasingMultiplier] = useState<{
+    [key: number]: boolean;
+  }>({});
+  const [multiplierAdded, setMultiplierAdded] = useState(false);
+  const [isAddingClicks, setIsAddingClicks] = useState(false);
+  const [clicksAdded, setClicksAdded] = useState(false);
+  const [isClaimingReward, setIsClaimingReward] = useState(false);
+
+  const handleIncreaseMultiplier = (multiplier: number, price: number) => {
+    setIsIncreasingMultiplier((prev) => ({ ...prev, [multiplier]: true }));
+    setMultiplierAdded(false);
+
     writeContract(
       {
         abi: ClickerAbi,
         address: ClickerAddress,
         functionName: "increaseMultiplier",
-        value: parseEther(amount.toString()),
+        value: parseEther(price.toString()),
       },
       {
         onSuccess: async (data) => {
           await waitForTransactionReceipt(config, { hash: data });
 
           await queryClient.invalidateQueries({
-            queryKey: queryKey,
+            queryKey: userInfoQueryKey,
             type: "all",
           });
 
           toast.success("Multiplier increased successfully");
+
+          setIsIncreasingMultiplier((prev) => ({
+            ...prev,
+            [multiplier]: false,
+          }));
+          setMultiplierAdded(true);
         },
         onError: (error) => {
           toast.error(error.message);
+
+          setIsIncreasingMultiplier((prev) => ({
+            ...prev,
+            [multiplier]: false,
+          }));
         },
       }
     );
   };
 
   const handleAddClicks = () => {
+    setIsAddingClicks(true);
+    setClicksAdded(false);
+
     writeContract(
       {
         abi: ClickerAbi,
         address: ClickerAddress,
         functionName: "click",
-        value: parseEther("0.000001"),
+        value: parseEther(clickCost),
       },
       {
         onSuccess: async (data) => {
           await waitForTransactionReceipt(config, { hash: data });
 
           await queryClient.invalidateQueries({
-            queryKey: queryKey,
+            queryKey: userInfoQueryKey,
             type: "all",
           });
 
           toast.success("Clicks added successfully");
+
+          setIsAddingClicks(false);
+          setClicksAdded(true);
         },
         onError: (error) => {
           toast.error(error.message);
+
+          setIsAddingClicks(false);
+        },
+      }
+    );
+  };
+
+  const handleClaimReward = () => {
+    setIsClaimingReward(true);
+
+    writeContract(
+      {
+        abi: ClickerAbi,
+        address: ClickerAddress,
+        functionName: "claimReward",
+      },
+      {
+        onSuccess: async (data) => {
+          await waitForTransactionReceipt(config, { hash: data });
+
+          await queryClient.invalidateQueries({
+            queryKey: pendingRewardsQueryKey,
+            type: "all",
+          });
+
+          toast.success("Reward claimed successfully");
+
+          setIsClaimingReward(false);
+        },
+        onError: (error) => {
+          toast.error(error.message);
+
+          setIsClaimingReward(false);
         },
       }
     );
   };
 
   return (
-    <div className="h-full">
-      <PageTitle title="Home" />
+    <div className="h-full pt-4">
+      <PageTitle
+        title={`Welcome, ${
+          userInfoResult.data ? userInfoResult.data[0] : "user"
+        }`}
+      />
       <div className="flex flex-col gap-4">
-        <div className="grid grid-cols-4 gap-4">
-          <Card>
+        <div className="grid grid-cols-1 min-[820px]:grid-cols-2 min-[1340px]:grid-cols-4 gap-4">
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Balance (TEA)</CardTitle>
             </CardHeader>
-            <CardFooter>
+            <CardFooter className="flex-grow flex items-center">
               <h1 className="text-3xl font-bold">
                 {Number(
                   formatEther(balanceResult.data?.value ?? BigInt(0))
@@ -106,43 +181,86 @@ export default function Home() {
               </h1>
             </CardFooter>
           </Card>
-          <Card>
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle className="flex items-center justify-between gap-2">
                 <span>Referral URL</span>
-                <Button size="icon" className="size-6">
-                  <CopyIcon className="w-4 h-4" />
-                </Button>
+                <CopyButton
+                  text={`${BASE_URL}/?ref=${
+                    userInfoResult.data ? userInfoResult.data[0] : ""
+                  }`}
+                  disabled={!userInfoResult.data}
+                />
               </CardTitle>
             </CardHeader>
-            <CardFooter>
+            <CardFooter className="flex-grow flex items-center">
               <span className="font-bold">
-                {BASE_URL}/?ref={userInfoResult.data ? userInfoResult.data[0] : ""}
+                {BASE_URL}/?ref=
+                {userInfoResult.data ? userInfoResult.data[0] : ""}
               </span>
             </CardFooter>
           </Card>
-          <Card>
+          <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Referrals</CardTitle>
             </CardHeader>
-            <CardFooter>
-              <h1 className="text-3xl font-bold">
-                {userInfoResult.data ? userInfoResult.data[3] : 0}
-              </h1>
-            </CardFooter>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Multiplier</CardTitle>
-            </CardHeader>
-            <CardFooter>
+            <CardFooter className="flex-grow flex items-center">
               <h1 className="text-3xl font-bold">
                 {userInfoResult.data ? userInfoResult.data[2] : 0}
               </h1>
             </CardFooter>
           </Card>
+          <Card className="flex flex-col">
+            <CardHeader>
+              <CardTitle>Multiplier</CardTitle>
+            </CardHeader>
+            <CardFooter className="flex-grow flex items-center">
+              <h1 className="text-3xl font-bold">
+                {userInfoResult.data ? (
+                  <CountUp
+                    from={Number(userInfoResult.data[1])}
+                    to={Number(userInfoResult.data[1])}
+                    separator=","
+                    direction="up"
+                    duration={1}
+                    startWhen={multiplierAdded}
+                  />
+                ) : (
+                  0
+                )}
+              </h1>
+            </CardFooter>
+          </Card>
         </div>
-        <div className="grid grid-cols-3 gap-4">
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Pending Rewards (TEA)</CardTitle>
+            <CardDescription>
+              Every 6 hours, the pending rewards for the top 50 users will be
+              updated. These users can then manually claim their rewards.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold">
+              {Number(formatEther(pendingRewardsResult.data ?? BigInt(0))) === 0
+                ? "0"
+                : Number(
+                    formatEther(pendingRewardsResult.data ?? BigInt(0))
+                  ).toFixed(5)}
+            </h1>
+            <Button
+              onClick={handleClaimReward}
+              disabled={!pendingRewardsResult.data || isClaimingReward}
+              className="flex items-center gap-2"
+            >
+              {isClaimingReward && <Loader2 className="size-4 animate-spin" />}
+              <span>Claim</span>
+            </Button>
+          </CardFooter>
+        </Card>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
           <Card className="flex flex-col">
             <CardHeader>
               <CardTitle>Total Clicks</CardTitle>
@@ -153,7 +271,18 @@ export default function Home() {
             </CardHeader>
             <CardFooter className="flex-grow flex items-center justify-center">
               <h1 className="text-3xl font-bold">
-                {userInfoResult.data ? userInfoResult.data[1] : 0}
+                {userInfoResult.data ? (
+                  <CountUp
+                    from={Number(userInfoResult.data[3])}
+                    to={Number(userInfoResult.data[3])}
+                    separator=","
+                    direction="up"
+                    duration={1}
+                    startWhen={clicksAdded}
+                  />
+                ) : (
+                  0
+                )}
               </h1>
             </CardFooter>
           </Card>
@@ -161,15 +290,23 @@ export default function Home() {
             <CardHeader>
               <CardTitle>Add Clicks</CardTitle>
               <CardDescription>
-                Each transaction costs 0.01 TEA no matter how many multipliers
+                Each transaction costs 0.1 TEA no matter how many multipliers
                 you have.
               </CardDescription>
             </CardHeader>
             <CardFooter className="flex-grow flex items-center justify-center">
-              <Button onClick={() => handleAddClicks()}>
-                <PlusIcon className="w-4 h-4" />
+              <Button
+                onClick={() => handleAddClicks()}
+                disabled={isAddingClicks}
+                className="flex items-center gap-2 rounded-md"
+              >
+                {isAddingClicks ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <PlusIcon className="size-4" />
+                )}
                 <span>
-                  Add {userInfoResult.data ? userInfoResult.data[2] : 0} Clicks
+                  Add {userInfoResult.data ? userInfoResult.data[1] : 0} Clicks
                 </span>
               </Button>
             </CardFooter>
@@ -178,19 +315,29 @@ export default function Home() {
             <CardHeader>
               <CardTitle>Increase Multiplier</CardTitle>
             </CardHeader>
-            <CardFooter className="grid grid-cols-2 items-center gap-2">
-              <div>+10 Multiplier</div>
-              <Button onClick={() => handleIncreaseMultiplier(0.0001)}>
-                Buy (10 TEA)
-              </Button>
-              <div>+25 Multiplier</div>
-              <Button onClick={() => handleIncreaseMultiplier(0.00025)}>
-                Buy (25 TEA)
-              </Button>
-              <div>+50 Multiplier</div>
-              <Button onClick={() => handleIncreaseMultiplier(0.0005)}>
-                Buy (50 TEA)
-              </Button>
+            <CardFooter className="flex flex-col gap-2">
+              {multipliers.map((multiplier, index) => (
+                <div
+                  className="flex gap-2 items-center justify-between"
+                  key={index}
+                >
+                  <div>
+                    +{multiplier} Multiplier ({multiplier} TEA)
+                  </div>
+                  <Button
+                    onClick={() =>
+                      handleIncreaseMultiplier(multiplier, multiplier)
+                    }
+                    disabled={isIncreasingMultiplier[multiplier]}
+                    className="flex items-center gap-2"
+                  >
+                    {isIncreasingMultiplier[multiplier] && (
+                      <Loader2 className="size-4 animate-spin" />
+                    )}
+                    <span>Buy</span>
+                  </Button>
+                </div>
+              ))}
             </CardFooter>
           </Card>
         </div>

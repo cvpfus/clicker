@@ -2,14 +2,10 @@ import { ClickerAbi } from "@/abi/Clicker";
 import { ClickerAddress } from "@/constants";
 import { useReadContract } from "wagmi";
 
-export const useGetUserInfo = (address: `0x${string}`) => {
+export const useGetLeaderboardInfo = () => {
   return useReadContract({
     abi: ClickerAbi,
     address: ClickerAddress,
-    functionName: "getUserFullData",
-    args: [address],
-    query: {
-      enabled: !!address,
-    },
+    functionName: "getUnsortedLeaderboard",
   });
 };

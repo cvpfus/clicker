@@ -10,6 +10,12 @@ export interface ItemProps {
   href: string;
 }
 
+export const SidebarGap = ({ className }: { className?: string }) => {
+  return (
+    <div className={cn("shrink-0 max-w-[250px] w-16 sm:w-full py-8 px-4", className)} />
+  );
+};
+
 export const Sidebar = ({
   children,
   className,
@@ -20,7 +26,7 @@ export const Sidebar = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-center justify-start gap-5 py-8 px-4 h-screen w-[250px] bg-card rounded-r-xl fixed",
+        "flex flex-col items-center justify-start gap-5 py-8 px-4 h-screen max-w-[250px] w-16 sm:w-full bg-card rounded-r-xl fixed z-50",
         className
       )}
     >
@@ -36,7 +42,7 @@ export const SidebarHeader = ({
   children: React.ReactNode;
   className?: string;
 }) => {
-  return <div className={cn("flex", className)}>{children}</div>;
+  return <div className={cn("hidden sm:flex", className)}>{children}</div>;
 };
 
 export const SidebarBody = ({
@@ -47,7 +53,12 @@ export const SidebarBody = ({
   className?: string;
 }) => {
   return (
-    <div className={cn("flex flex-col items-start w-full", className)}>
+    <div
+      className={cn(
+        "flex flex-col gap-2 sm:gap-0 items-start w-full",
+        className
+      )}
+    >
       {children}
     </div>
   );
@@ -68,14 +79,14 @@ export const SidebarItem = ({
     <Link
       href={item.href}
       className={cn(
-        "flex items-center justify-start gap-2 w-full hover:bg-slate-800 rounded-md p-2 font-medium [&.active]:text-active",
+        "flex items-center justify-start gap-2 w-full hover:bg-slate-800 rounded-md p-2 font-medium [&.active]:text-active [&.active]:bg-slate-800 sm:[&.active]:bg-transparent",
         pathname === item.href ? "active" : "",
         className
       )}
       {...props}
     >
       <span>{item.icon}</span>
-      <span>{item.label}</span>
+      <span className="hidden sm:block">{item.label}</span>
     </Link>
   );
 };
