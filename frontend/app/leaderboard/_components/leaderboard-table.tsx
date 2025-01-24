@@ -12,6 +12,9 @@ import {
   TableCell,
   type ColumnDef,
 } from "@/components/ui/kibo-ui/table";
+import { useCountdown } from "@/hooks/use-countdown";
+import { formatTime } from "@/lib/utils";
+
 
 interface LeaderboardInfo {
   id: number;
@@ -23,16 +26,18 @@ interface LeaderboardInfo {
 export const LeaderboardTable = () => {
   const { data, status } = useGetLeaderboardInfo();
 
+  const { timeLeft } = useCountdown();
+
   const sortedLeaderboard: LeaderboardInfo[] =
     status === "success"
       ? data
-          .filter((user) => user.clicks > 0)
-          .sort((a, b) => Number(b.clicks) - Number(a.clicks))
-          .map((user, index) => ({
-            ...user,
-            id: index,
-            clicks: Number(user.clicks),
-          }))
+        .filter((user) => user.clicks > 0)
+        .sort((a, b) => Number(b.clicks) - Number(a.clicks))
+        .map((user, index) => ({
+          ...user,
+          id: index,
+          clicks: Number(user.clicks),
+        }))
       : [];
 
   const columns: ColumnDef<LeaderboardInfo>[] = [
@@ -64,8 +69,11 @@ export const LeaderboardTable = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-2">
       <span className="text-lg font-bold">Current Leaderboard</span>
+      <span className="text-sm text-muted-foreground">
+        Estimated time remaining until leaderboard reset: {formatTime(timeLeft)}.
+      </span>
       <TableProvider columns={columns} data={sortedLeaderboard}>
         <TableHeader>
           {({ headerGroup }) => (
