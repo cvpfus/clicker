@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import Mergent from "mergent";
-import { createWalletClient, http, createPublicClient } from "viem";
+import { createWalletClient, http, createPublicClient, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { ClickerAddress, teaTestnet } from "@/constants";
+import { clickCost, ClickerAddress, teaTestnet } from "@/constants";
 import { ClickerAbi } from "@/abi/Clicker";
 
 export async function POST(req: NextRequest) {
@@ -45,6 +45,14 @@ export async function POST(req: NextRequest) {
 
     // Wait for transaction
     const receipt = await publicClient.waitForTransactionReceipt({ hash });
+
+    // Call click
+    await client.writeContract({
+      address: ClickerAddress,
+      abi: ClickerAbi,
+      functionName: "click",
+      value: parseEther(clickCost),
+    });
 
     return NextResponse.json({
       message: "Leaderboard reset successful",
