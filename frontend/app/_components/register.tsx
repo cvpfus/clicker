@@ -7,7 +7,7 @@ import { useState } from "react";
 import { ClickerAbi } from "@/abi/Clicker";
 import { ClickerAddress } from "@/constants";
 import { config } from "@/wagmi";
-import { waitForTransactionReceipt } from "@wagmi/core";
+import { waitForTransactionReceipt, readContract } from "@wagmi/core";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
 import { useGetRegisteredStatusByAddress } from "@/hooks/use-get-registered-status";
@@ -32,6 +32,18 @@ export const Register = () => {
   const handleRegister = async () => {
     if (!username) {
       toast.error("Username cannot be empty");
+      return;
+    }
+
+    const isUsernameTaken = await readContract(config, {
+      abi: ClickerAbi,
+      address: ClickerAddress,
+      functionName: "isUsernameTaken",
+      args: [username],
+    });
+
+    if (isUsernameTaken) {
+      toast.error("Username already taken");
       return;
     }
 
