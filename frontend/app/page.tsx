@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { PageTitle } from "@/components/ui/page-title";
-import { Loader2, PlusIcon } from "lucide-react";
+import { InfoIcon, Loader2, PlusIcon } from "lucide-react";
 import { useAccount, useBalance } from "wagmi";
 import { formatEther, parseEther } from "viem";
 import { useGetUserInfo } from "@/hooks/use-get-user-info";
@@ -25,6 +25,7 @@ import { useGetPendingRewards } from "@/hooks/use-get-pending-rewards";
 import CopyButton from "./_components/copy-button";
 import CountUp from "@/blocks/TextAnimations/CountUp/CountUp";
 import { multipliers, clickCost } from "@/constants";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 export default function Home() {
   const { address } = useAccount();
@@ -163,9 +164,8 @@ export default function Home() {
   return (
     <div className="h-full pt-4">
       <PageTitle
-        title={`Welcome, ${
-          userInfoResult.data ? userInfoResult.data[0] : "user"
-        }`}
+        title={`Welcome, ${userInfoResult.data ? userInfoResult.data[0] : "user"
+          }`}
       />
       <div className="flex flex-col gap-4">
         <div className="grid grid-cols-1 min-[820px]:grid-cols-2 min-[1340px]:grid-cols-4 gap-4">
@@ -186,9 +186,8 @@ export default function Home() {
               <CardTitle className="flex items-center justify-between gap-2">
                 <span>Referral URL</span>
                 <CopyButton
-                  text={`${BASE_URL}/?ref=${
-                    userInfoResult.data ? userInfoResult.data[0] : ""
-                  }`}
+                  text={`${BASE_URL}/?ref=${userInfoResult.data ? userInfoResult.data[0] : ""
+                    }`}
                   disabled={!userInfoResult.data}
                 />
               </CardTitle>
@@ -202,7 +201,24 @@ export default function Home() {
           </Card>
           <Card className="flex flex-col">
             <CardHeader>
-              <CardTitle>Referrals</CardTitle>
+              <CardTitle className="flex items-center justify-between gap-2">
+                <span>Referrals</span>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="icon" variant="outline" className="size-6">
+                      <InfoIcon className="size-4" />
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Referrals</DialogTitle>
+                    </DialogHeader>
+                    <DialogDescription>
+                      When a new user registers using your referral URL, both you and the new user will receive a +1 multiplier.
+                    </DialogDescription>
+                  </DialogContent>
+                </Dialog>
+              </CardTitle>
             </CardHeader>
             <CardFooter className="flex-grow flex items-center">
               <h1 className="text-3xl font-bold">
@@ -246,8 +262,8 @@ export default function Home() {
               {Number(formatEther(pendingRewardsResult.data ?? BigInt(0))) === 0
                 ? "0"
                 : Number(
-                    formatEther(pendingRewardsResult.data ?? BigInt(0))
-                  ).toFixed(5)}
+                  formatEther(pendingRewardsResult.data ?? BigInt(0))
+                ).toFixed(5)}
             </h1>
             <Button
               onClick={handleClaimReward}
