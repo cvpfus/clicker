@@ -76,6 +76,11 @@ export default function Home() {
             type: "all",
           });
 
+          await queryClient.invalidateQueries({
+            queryKey: balanceResult.queryKey,
+            type: "all",
+          });
+
           toast.success("Multiplier increased successfully");
 
           setIsIncreasingMultiplier((prev) => ({
@@ -113,6 +118,11 @@ export default function Home() {
 
           await queryClient.invalidateQueries({
             queryKey: userInfoQueryKey,
+            type: "all",
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: balanceResult.queryKey,
             type: "all",
           });
 
