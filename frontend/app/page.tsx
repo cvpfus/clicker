@@ -158,6 +158,11 @@ export default function Home() {
             type: "all",
           });
 
+          await queryClient.invalidateQueries({
+            queryKey: balanceResult.queryKey,
+            type: "all",
+          });
+
           toast.success("Reward claimed successfully");
 
           setIsClaimingReward(false);
