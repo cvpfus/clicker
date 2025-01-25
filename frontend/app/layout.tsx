@@ -16,6 +16,7 @@ import { headers } from "next/headers";
 import Connect from "./_components/connect";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "react-hot-toast";
+import Script from 'next/script'
 import "./globals.css";
 
 const items: ItemProps[] = [
@@ -85,6 +86,7 @@ export default async function RootLayout({
           </div>
         </ThemeProvider>
       </body>
+      <Script src="https://scripts.simpleanalyticscdn.com/latest.js" />
     </html>
   );
 }
