@@ -225,7 +225,7 @@ export default function Home() {
               {currentPool === 0
                 ? "0"
                 : Number(
-                  formatEther(currentPool)
+                  formatEther(BigInt(currentPool))
                 ).toFixed(5)}
             </h1>
           </CardFooter>
