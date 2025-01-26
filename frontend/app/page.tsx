@@ -26,6 +26,7 @@ import CopyButton from "./_components/copy-button";
 import CountUp from "@/blocks/TextAnimations/CountUp/CountUp";
 import { multipliers, clickCost } from "@/constants";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { useGetTotalPendingRewards } from "@/hooks/use-get-total-pending-rewards";
 
 export default function Home() {
   const { address } = useAccount();
@@ -39,12 +40,19 @@ export default function Home() {
     },
   });
 
+  const contractBalanceResult = useBalance({
+    address: ClickerAddress,
+  })
+
   const { queryKey: userInfoQueryKey, ...userInfoResult } = useGetUserInfo(
     address!
   );
 
   const { queryKey: pendingRewardsQueryKey, ...pendingRewardsResult } =
     useGetPendingRewards(address!);
+
+  const { queryKey: totalPendingRewardsQueryKey, ...totalPendingRewardsResult } =
+    useGetTotalPendingRewards();
 
   const { writeContract } = useWriteContract();
 
@@ -55,6 +63,8 @@ export default function Home() {
   const [isAddingClicks, setIsAddingClicks] = useState(false);
   const [clicksAdded, setClicksAdded] = useState(false);
   const [isClaimingReward, setIsClaimingReward] = useState(false);
+
+  const currentPool = contractBalanceResult.data && totalPendingRewardsResult.data ? (Number(contractBalanceResult.data.value) - Number(totalPendingRewardsResult.data)) / 2 : 0;
 
   const handleIncreaseMultiplier = (multiplier: number, price: number) => {
     setIsIncreasingMultiplier((prev) => ({ ...prev, [multiplier]: true }));
@@ -78,6 +88,11 @@ export default function Home() {
 
           await queryClient.invalidateQueries({
             queryKey: balanceResult.queryKey,
+            type: "all",
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: contractBalanceResult.queryKey,
             type: "all",
           });
 
@@ -126,6 +141,11 @@ export default function Home() {
             type: "all",
           });
 
+          await queryClient.invalidateQueries({
+            queryKey: contractBalanceResult.queryKey,
+            type: "all",
+          });
+
           toast.success("Clicks added successfully");
 
           setIsAddingClicks(false);
@@ -163,6 +183,16 @@ export default function Home() {
             type: "all",
           });
 
+          await queryClient.invalidateQueries({
+            queryKey: contractBalanceResult.queryKey,
+            type: "all",
+          });
+
+          await queryClient.invalidateQueries({
+            queryKey: totalPendingRewardsQueryKey,
+            type: "all",
+          });
+
           toast.success("Reward claimed successfully");
 
           setIsClaimingReward(false);
@@ -183,6 +213,24 @@ export default function Home() {
           }`}
       />
       <div className="flex flex-col gap-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Current Pool (TEA)</CardTitle>
+            <CardDescription>
+              The current pool is dynamically updated and distributed to the top 50 users every 6 hours.
+            </CardDescription>
+          </CardHeader>
+          <CardFooter>
+            <h1 className="text-3xl font-bold">
+              {currentPool === 0
+                ? "0"
+                : Number(
+                  formatEther(currentPool)
+                ).toFixed(5)}
+            </h1>
+          </CardFooter>
+        </Card>
+
         <div className="grid grid-cols-1 min-[820px]:grid-cols-2 min-[1340px]:grid-cols-4 gap-4">
           <Card className="flex flex-col">
             <CardHeader>
